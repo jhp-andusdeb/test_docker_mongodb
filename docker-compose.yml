@@ -1,0 +1,37 @@
+version: '3'
+services:
+  mongo1:
+    image: mongo:4.0
+    ports:
+      - "27020:27017"
+    volumes:
+      - $HOME/mongo-replica-set-docker/repl/mongo1:/data/db
+    networks:
+      - mongo-networks
+    command: mongod --replSet replication --bind_ip_all
+  mongo2:
+    image: mongo:4.0
+    ports:
+      - "27021:27017"
+    volumes:
+      - $HOME/mongo-replica-set-docker/repl/mongo2:/data/db
+    networks:
+      - mongo-networks
+    command: mongod --replSet replication --bind_ip_all
+    depends_on:
+      - mongo1
+  mongo3:
+    image: mongo:4.0
+    ports:
+      - "27022:27017"
+    volumes:
+      - $HOME/mongo-replica-set-docker/repl/mongo3:/data/db
+    networks:
+      - mongo-networks
+    command: mongod --replSet replication --bind_ip_all
+    depends_on:
+      - mongo2
+
+networks:
+  mongo-networks:
+    driver: bridge
